@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANNIV FOU - EXAUCÉ & RACHEL!</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800;900&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="vibration-phase" class="phase active">
+        <div class="quake-container">
+            <div class="alert-badge">🚨</div>
+            <h1 class="shake-text">ATTENTION</h1>
+            <h2 class="pulse">TON PHONE VIBRE POUR NOTRE ANNIV!</h2>
+            <div class="countdown">00:15</div>
+            <p class="tap-hint">Touche l'écran pour passer directement aux photos!</p>
+        </div>
+    </div>
+
+    <div id="photo-phase" class="phase">
+        <div class="photo-container">
+            <div class="celebration-header">
+                <div class="sparkle">✨</div>
+                <h1>JOYEUX ANNIVERSAIRE!</h1>
+                <div class="sparkle">✨</div>
+            </div>
+            
+            <div class="photos-duo">
+                <div class="photo-item">
+                    <div class="photo-frame">
+                        <img src="assets/Moi.jpeg" alt="Exaucé" class="anniv-photo">
+                        <div class="photo-glow"></div>
+                    </div>
+                    <p class="photo-name">EXAUCÉ</p>
+                </div>
+                <div class="photo-item">
+                    <div class="photo-frame">
+                        <img src="assets/da_rachel.jpeg" alt="Rachel" class="anniv-photo">
+                        <div class="photo-glow"></div>
+                    </div>
+                    <p class="photo-name">RACHEL</p>
+                </div>
+            </div>
+            
+            <div class="message">
+            <h2 class="names-highlight">EXAUCÉ & RACHEL <span class="emoji-heart">❤️</span></h2>
+            <p class="cool-message">Aujourd’hui, nous célébrons plus qu’un anniversaire. 
+                C’est une grâce, une nouvelle étape, un moment de reconnaissance.</p>
+            <p class="sub-message">Merci à tous ceux qui nous portent dans leur cœur, 
+                leurs prières et leurs pensées. Que Dieu vous bénisse autant que vous nous bénissez.</p>
+            </div>
+
+            
+            <div class="celebration-footer">
+                <button id="replay-btn" class="replay-button">🎉 Rejouer l'animation 🎉</button>
+            </div>
+            
+            <div class="confetti-container">
+                <div class="confetti"></div>
+                <div class="confetti"></div>
+                <div class="confetti"></div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="celebration-sound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-happy-birthday-horn-575.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
