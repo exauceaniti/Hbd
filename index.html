@@ -1,96 +1,141 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANNIVERSAIRE - EXAUCÉ Aniti & RACHEL Aniti!</title>
-    
-    <!-- Favicon pour l'onglet -->
-    <link rel="icon" href="assets/logo.png" type="image/png">
-    
-    <!-- Meta pour le partage sur les réseaux sociaux -->
-    <meta property="og:title" content="ANNIVERSAIRE - EXAUCÉ Aniti & RACHEL Aniti!">
-    <meta property="og:description" content="🎉 Joyeux Anniversaire Exaucé & Rachel ! Célébrons cette journée spéciale ensemble !">
-    <meta property="og:image" content="https://exauceaniti.github.io/Hbd/assets/logo.png">
-    <meta property="og:url" content="https://exauceaniti.github.io/Hbd/">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Anniversaire Exaucé & Rachel">
-    
-    <!-- Meta Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ANNIVERSAIRE - EXAUCÉ Aniti & RACHEL Aniti!">
-    <meta name="twitter:description" content="🎉 Joyeux Anniversaire Exaucé & Rachel ! Célébrons cette journée spéciale ensemble !">
-    <meta name="twitter:image" content="https://exauceaniti.github.io/Hbd/assets/logo.png">
-    
-    <!-- Autres meta -->
-    <meta name="description" content="Site d'anniversaire surprise pour Exaucé et Rachel - Animation vibrante et photos">
-    <meta name="keywords" content="anniversaire, celebration, joyeux anniversaire, exaucé, rachel">
-    <meta name="author" content="Ton Nom">
-    
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800;900&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <title>Géolocalisation tp 4</title>
+    <style>
+        /* On définit la taille de l'écran */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial;
+        }
+
+        #controls {
+            padding: 10px;
+            background: #f4f4f4;
+            border-bottom: 1px solid #ccc;
+        }
+
+        #map_canvas {
+            height: 70%;
+            width: 100%;
+        }
+
+        #stats {
+            height: 20%;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+
+        .valeur {
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
 </head>
-<body>
-    <div id="vibration-phase" class="phase active">
-        <div class="quake-container">
-            <div class="alert-badge">🚨</div>
-            <h1 class="shake-text">ATTENTION</h1>
-            <h2 class="pulse">TON PHONE VIBRE POUR NOTRE ANNIV!</h2>
-            <div class="countdown">00:15</div>
-            <p class="tap-hint">Touche l'écran pour passer directement aux photos!</p>
-        </div>
+
+<body onload="initialize()">
+
+    <div id="controls">
+        <label>Type de carte : </label>
+        <select id="mapType" onchange="changeMapType()">
+            <option value="roadmap">Roadmap</option>
+            <option value="satellite">Satellite</option>
+            <option value="hybrid">Hybride</option>
+        </select>
     </div>
 
-    <div id="photo-phase" class="phase">
-        <div class="photo-container">
-            <div class="celebration-header">
-                <div class="sparkle">✨</div>
-                <h1>JOYEUX ANNIVERSAIRE!</h1>
-                <div class="sparkle">✨</div>
-            </div>
-            
-            <div class="photos-duo">
-                <div class="photo-item">
-                    <div class="photo-frame">
-                        <img src="assets/Moi.jpeg" alt="Exaucé" class="anniv-photo">
-                        <div class="photo-glow"></div>
-                    </div>
-                    <p class="photo-name">EXAUCÉ Aniti</p>
-                </div>
-                <div class="photo-item">
-                    <div class="photo-frame">
-                        <img src="assets/da_rachel.jpeg" alt="Rachel" class="anniv-photo">
-                        <div class="photo-glow"></div>
-                    </div>
-                    <p class="photo-name">RACHEL Aniti</p>
-                </div>
-            </div>
-            
-            <div class="message">
-            <h2 class="names-highlight">EXAUCÉ Aniti & RACHEL Aniti<span class="emoji-heart">❤️</span></h2>
-            <p class="cool-message">Aujourd'hui, nous célébrons plus qu'un anniversaire. 
-                C'est une grâce, une nouvelle étape, un moment de reconnaissance.</p>
-            <p class="sub-message">Merci à tous ceux qui nous portent dans leur cœur, 
-                leurs prières et leurs pensées. Que Dieu vous bénisse autant que vous nous bénissez.</p>
-            </div>
+    <div id="map_canvas"></div>
 
-            
-            <div class="celebration-footer">
-                <button id="replay-btn" class="replay-button">🎉 Rejouer l'animation 🎉</button>
-            </div>
-            
-            <div class="confetti-container">
-                <div class="confetti"></div>
-                <div class="confetti"></div>
-                <div class="confetti"></div>
-            </div>
-        </div>
+    <div id="stats">
+        <strong>Données en temps réel :</strong><br>
+        Latitude: <span id="lat" class="valeur">-</span> |
+        Longitude: <span id="lon" class="valeur">-</span> |
+        Précision: <span id="acc" class="valeur">-</span> m<br>
+        Angle (Direction): <span id="heading" class="valeur">-</span>° |
+        Vitesse: <span id="speed" class="valeur">-</span> m/s<br>
+        Dernière MAJ: <span id="time" class="valeur">-</span>
     </div>
 
-    <audio id="celebration-sound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-happy-birthday-horn-575.mp3" type="audio/mpeg">
-    </audio>
+    <script>
+        var map;
+        var marker;
+        var previousPosition = null;
 
-    <script src="script.js"></script>
+        function initialize() {
+            // Configuration initiale de la carte
+            var optionsDeLaCarte = {
+                zoom: 15,
+                center: new google.maps.LatLng(0, 0),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            map = new google.maps.Map(document.getElementById("map_canvas"), optionsDeLaCarte);
+            marker = new google.maps.Marker({ map: map, title: "Vous êtes ici" });
+
+            // Lancer la surveillance
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(successCallback, errorCallback, {
+                    enableHighAccuracy: true,
+                    maximumAge: 0
+                });
+            } else {
+                alert("Géolocalisation non supportée");
+            }
+        }
+
+        // Fonction pour changer le type de carte via le menu
+        function changeMapType() {
+            var typeSelectionne = document.getElementById("mapType").value;
+            map.setMapTypeId(typeSelectionne);
+        }
+
+        function successCallback(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            var angle = position.coords.heading;
+            var vitesse = position.coords.speed;
+            var nllePos = new google.maps.LatLng(lat, lon);
+
+            // Mise à jour de l'affichage texte
+            document.getElementById('lat').innerHTML = lat.toFixed(6);
+            document.getElementById('lon').innerHTML = lon.toFixed(6);
+            document.getElementById('acc').innerHTML = position.coords.accuracy;
+            document.getElementById('heading').innerHTML = (angle !== null) ? angle : "N/A";
+            document.getElementById('speed').innerHTML = (vitesse !== null) ? vitesse : "0";
+            document.getElementById('time').innerHTML = new Date().toLocaleTimeString();
+
+            // Mise à jour du marqueur et centrage
+            map.panTo(nllePos);
+            marker.setPosition(nllePos);
+
+            // Dessiner le tracé
+            if (previousPosition) {
+                var path = [
+                    new google.maps.LatLng(previousPosition.coords.latitude, previousPosition.coords.longitude),
+                    nllePos
+                ];
+                new google.maps.Polyline({
+                    path: path,
+                    strokeColor: "#FF0000",
+                    strokeWeight: 3,
+                    map: map
+                });
+            }
+            previousPosition = position;
+        }
+
+        function errorCallback(err) {
+            console.error("Erreur de position : " + err.message);
+        }
+    </script>
 </body>
+
 </html>
